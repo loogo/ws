@@ -6,6 +6,8 @@ import (
 	"net/http"
 	"time"
 	"github.com/gorilla/websocket"
+	"fmt"
+	"encoding/json"
 )
 
 const (
@@ -64,7 +66,10 @@ func (c *Client) readPump() {
 			}
 			break
 		}
+		data := &User{}
 		message = bytes.TrimSpace(bytes.Replace(message, newline, space, -1))
+		json.Unmarshal(message, data)
+		fmt.Println(":received message:", data.Code)
 		c.hub.broadcast <- message
 	}
 }
@@ -80,6 +85,7 @@ func (c *Client) writePump() {
 		ticker.Stop()
 		c.conn.Close()
 	}()
+
 	for {
 		select {
 		case message, ok := <-c.send:
@@ -132,4 +138,3 @@ func ServeWs(hub *Hub, w http.ResponseWriter, r *http.Request) {
 	go client.writePump()
 	go client.readPump()
 }
-
