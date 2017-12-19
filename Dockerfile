@@ -1,6 +1,7 @@
 FROM golang:1.9.2-alpine
+RUN pwd
 ADD . /go/src/github.com/loogo/ws
-RUN ls -al
+RUN pwd
 RUN apk add --no-cache git
 RUN go get -d -v github.com/gin-gonic/gin
 RUN go get -d -v github.com/gorilla/websocket
