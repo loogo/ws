@@ -1,5 +1,5 @@
 package server
 
 type User struct {
-	Code string `json:"user"`
+	Code string `json:"code"`
 }

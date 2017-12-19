@@ -45,6 +45,10 @@ type Client struct {
 	send chan []byte
 }
 
+func (c *Client) Send(message string) {
+	c.send <- []byte(message)
+}
+
 // readPump pumps messages from the websocket connection to the hub.
 //
 // The application runs readPump in a per-connection goroutine. The application

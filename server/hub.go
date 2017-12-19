@@ -60,6 +60,10 @@ func (h *Hub) disConnected(client *Client) {
 	}
 }
 
+func (h *Hub) Broadcast(message string) {
+	h.broadcast <- []byte(message)
+}
+
 func (h *Hub) GetUsers() (users []*User) {
 	for _, v := range h.GetDistinct() {
 		users = append(users, v.user)
@@ -78,6 +82,29 @@ func (h *Hub) GetDistinct() (clients []*Client) {
 			}
 			if !duplicate {
 				clients = append(clients, key)
+			}
+		}
+	}
+	return
+}
+
+func (h *Hub) FindBy(codes []string) (clients []*Client) {
+	for key, value := range h.clients {
+		if value {
+			duplicate := false
+			for _, v := range clients {
+				if v.user.Code == key.user.Code {
+					duplicate = true
+					break
+				}
+			}
+			if !duplicate {
+				for _, code := range codes {
+					if key.user.Code == code {
+						clients = append(clients, key)
+						break
+					}
+				}
 			}
 		}
 	}

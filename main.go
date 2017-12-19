@@ -43,6 +43,24 @@ func main() {
 		c.JSON(http.StatusOK, hub.GetUsers())
 	})
 
+	r.POST("/sendto", func(c *gin.Context) {
+		var message server.Message
+		if err := c.ShouldBindJSON(&message); err == nil {
+			clients := hub.FindBy(message.SendTo)
+			if message.Type == 0 && len(clients) > 0 {
+				clients[0].Send(message.Data)
+			} else if message.Type == 1 {
+				for _, client := range clients {
+					client.Send(message.Data)
+				}
+			} else if message.Type == 2 {
+				hub.Broadcast(message.Data)
+			}
+		} else {
+			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		}
+	})
+
 	err := r.Run(*addr)
 	if err != nil {
 		log.Fatal("ListenAndServe: ", err)
