@@ -7,5 +7,5 @@ RUN go install github.com/loogo/ws
 
 FROM alpine:latest
 COPY --from=0 /go/bin/ws .
-
+COPY  /go/src/github.com/loogo/ws/home.html .
 CMD ["./ws"]
