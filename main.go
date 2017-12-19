@@ -4,7 +4,7 @@ import (
 	"flag"
 	"net/http"
 	"log"
-	"./server"
+	"github.com/loogo/ws/server"
 	"github.com/gin-gonic/gin"
 )
 
