@@ -29,6 +29,7 @@ func main() {
 	hub := server.NewHub()
 	go hub.Run()
 	r := gin.Default()
+
 	r.GET("/", serveHome)
 	r.GET("/ws", func(c *gin.Context) {
 		w, r := c.Writer, c.Request
