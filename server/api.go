@@ -33,7 +33,7 @@ func Api(r *gin.Engine, hub *Hub) {
 		}
 	})
 
-	r.GET("getuserstatus", func(c *gin.Context) {
+	r.GET("/getuserstatus", func(c *gin.Context) {
 		allowcors(c)
 		users := c.QueryArray("code")
 		clients := hub.FindBy(users)
@@ -44,7 +44,7 @@ func Api(r *gin.Engine, hub *Hub) {
 		c.JSON(http.StatusOK, onlineusers)
 	})
 
-	r.GET("version", func(c *gin.Context) {
+	r.GET("/version", func(c *gin.Context) {
 		allowcors(c)
 		c.JSON(http.StatusOK, "1.0.1")
 	})
