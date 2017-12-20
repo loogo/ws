@@ -43,6 +43,11 @@ func Api(r *gin.Engine, hub *Hub) {
 		}
 		c.JSON(http.StatusOK, onlineusers)
 	})
+
+	r.GET("version", func(c *gin.Context) {
+		allowcors(c)
+		c.JSON(http.StatusOK, "1.0.1")
+	})
 }
 
 func allowcors(c *gin.Context) {
