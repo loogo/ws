@@ -32,7 +32,7 @@ var (
 var upgrader = websocket.Upgrader{
 	ReadBufferSize:  1024,
 	WriteBufferSize: 1024,
-	CheckOrigin: func(r *http.Request) bool { return true },
+	CheckOrigin:     func(r *http.Request) bool { return true },
 }
 
 // Client is a middleman between the websocket connection and the hub.
@@ -44,6 +44,8 @@ type Client struct {
 
 	// Buffered channel of outbound messages.
 	send chan []byte
+
+	jointime time.Time
 }
 
 func (c *Client) Send(message string) {
@@ -135,7 +137,7 @@ func ServeWs(hub *Hub, w http.ResponseWriter, r *http.Request) {
 	}
 	vls := r.URL.Query()
 	user := &User{Code: vls["code"][0]}
-	client := &Client{hub: hub, user: user, conn: conn, send: make(chan []byte, 256)}
+	client := &Client{hub: hub, user: user, jointime: time.Now(), conn: conn, send: make(chan []byte, 256)}
 	client.hub.register <- client
 
 	// Allow collection of memory referenced by the caller by doing all work in

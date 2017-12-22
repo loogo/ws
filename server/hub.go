@@ -65,25 +65,23 @@ func (h *Hub) Broadcast(message string) {
 }
 
 func (h *Hub) GetUsers() (users []*User) {
-	for _, v := range h.GetDistinct() {
-		users = append(users, v.user)
+	us := h.GetDistinct()
+	for _, v := range us {
+		if v != nil && !contains(users, v.user) {
+			users = append(users, v.user)
+		}
 	}
 	return
 }
 func (h *Hub) GetDistinct() (clients []*Client) {
+	cc := len(h.clients)
+	clients = make([]*Client, cc)
+	i := 0
 	for key, value := range h.clients {
 		if value {
-			duplicate := false
-			for _, v := range clients {
-				if v.user.Code == key.user.Code {
-					duplicate = true
-					break
-				}
-			}
-			if !duplicate {
-				clients = append(clients, key)
-			}
+			clients[cc-1-i] = key
 		}
+		i++
 	}
 	return
 }

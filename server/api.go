@@ -6,8 +6,23 @@ import (
 )
 
 func Api(r *gin.Engine, hub *Hub) {
+	r.Use(func(context *gin.Context) {
+		context.Writer.Header().Add("Access-Control-Allow-Origin", "*")
+		context.Writer.Header().Set("Access-Control-Max-Age", "86400")
+		context.Writer.Header().Set("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT, DELETE, UPDATE")
+		context.Writer.Header().Set("Access-Control-Allow-Headers", "Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization, accept, origin, Cache-Control, X-Requested-With")
+		context.Writer.Header().Set("Access-Control-Expose-Headers", "Content-Length")
+		context.Writer.Header().Set("Access-Control-Allow-Credentials", "true")
+
+		if context.Request.Method == "OPTIONS" {
+			context.AbortWithStatus(200)
+		} else {
+			context.Next()
+		}
+	})
+
 	r.GET("/onlinecount", func(c *gin.Context) {
-		c.String(http.StatusOK, "%d", len(hub.GetDistinct()))
+		c.String(http.StatusOK, "%d", len(hub.GetUsers()))
 	})
 	r.GET("/onlineusers", func(c *gin.Context) {
 		c.JSON(http.StatusOK, hub.GetUsers())
@@ -42,19 +57,5 @@ func Api(r *gin.Engine, hub *Hub) {
 
 	r.GET("/version", func(c *gin.Context) {
 		c.JSON(http.StatusOK, "1.0.2")
-	})
-
-	r.Use(func(c *gin.Context) {
-		c.Writer.Header().Set("Access-Control-Allow-Origin", "*")
-		c.Writer.Header().Set("Access-Control-Allow-Credentials", "true")
-		c.Writer.Header().Set("Access-Control-Allow-Headers", "Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization, accept, origin, Cache-Control, X-Requested-With")
-		c.Writer.Header().Set("Access-Control-Allow-Methods", "POST, OPTIONS, GET, PUT")
-
-		if c.Request.Method == "OPTIONS" {
-			c.AbortWithStatus(204)
-			return
-		}
-
-		c.Next()
 	})
 }

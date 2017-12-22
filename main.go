@@ -6,6 +6,8 @@ import (
 	"log"
 	"github.com/loogo/ws/server"
 	"github.com/gin-gonic/gin"
+	"os"
+	"io"
 )
 
 var addr = flag.String("addr", ":8080", "http service address")
@@ -28,6 +30,9 @@ func main() {
 	flag.Parse()
 	hub := server.NewHub()
 	go hub.Run()
+	gin.DisableConsoleColor()
+	f, _ := os.Create("ws.log")
+	gin.DefaultWriter = io.MultiWriter(f)
 	r := gin.Default()
 
 	r.GET("/", serveHome)
@@ -43,4 +48,3 @@ func main() {
 		log.Fatal("ListenAndServe: ", err)
 	}
 }
-
