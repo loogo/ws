@@ -56,6 +56,6 @@ func Api(r *gin.Engine, hub *Hub) {
 	})
 
 	r.GET("/version", func(c *gin.Context) {
-		c.JSON(http.StatusOK, "1.0.2")
+		c.JSON(http.StatusOK, "1.0.3")
 	})
 }
