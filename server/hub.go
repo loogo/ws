@@ -89,19 +89,9 @@ func (h *Hub) GetDistinct() (clients []*Client) {
 func (h *Hub) FindBy(codes []string) (clients []*Client) {
 	for key, value := range h.clients {
 		if value {
-			duplicate := false
-			for _, v := range clients {
-				if v.user.Code == key.user.Code {
-					duplicate = true
-					break
-				}
-			}
-			if !duplicate {
-				for _, code := range codes {
-					if key.user.Code == code {
-						clients = append(clients, key)
-						break
-					}
+			for _, code := range codes {
+				if key.user.Code == code {
+					clients = append(clients, key)
 				}
 			}
 		}
