@@ -31,7 +31,7 @@ func Api(r *gin.Engine, hub *Hub) {
 		var message Message
 		if err := c.ShouldBindJSON(&message); err == nil {
 			clients := hub.FindBy(message.SendTo)
-			if message.Type == 0 && message.Type == 1 {
+			if message.Type == 0 || message.Type == 1 {
 				for _, client := range clients {
 					client.Send(message.Data)
 				}
@@ -54,6 +54,6 @@ func Api(r *gin.Engine, hub *Hub) {
 	})
 
 	r.GET("/version", func(c *gin.Context) {
-		c.JSON(http.StatusOK, "1.0.3")
+		c.JSON(http.StatusOK, "1.0.5")
 	})
 }
